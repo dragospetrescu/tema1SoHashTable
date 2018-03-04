@@ -1,0 +1,6 @@
+*.o
+*.iml
+tema1
+CMakeLists.txt
+cmake-build-debug/*
+.idea/
