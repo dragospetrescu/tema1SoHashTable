@@ -1,13 +1,13 @@
 all: tema1
 
-tema1: main.o
-        gcc -Wall main.c -o tema1 -lhash -L.
+tema1: tema1.o
+	gcc -Wall tema1.c -o tema1 -lhash -L.
 
-main.o: main.c
-        gcc -fPIC -c main.c
+tema1.o: tema1.c
+	gcc -fPIC -c tema1.c
 
 clean:
-        rm *.o tema1
+	rm *.o tema1
 
 
 
