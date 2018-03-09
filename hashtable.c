@@ -4,14 +4,10 @@
 
 #include "hashtable.h"
 
-void remove_word_from_bucket(BUCKET *bucket, char *word);
-int bucket_is_empty(BUCKET *bucket);
-void remove_empty_bucket(HASHTABLE *hashtable, BUCKET *to_be_removed_bucket);
-
 
 void add_word_to_bucket(BUCKET **bucket, char *new_word) {
 
-    if(bucket_contains_word((*bucket), new_word)) {
+    if (bucket_contains_word((*bucket), new_word)) {
         return;
     }
 
@@ -43,26 +39,12 @@ int bucket_contains_word(BUCKET *bucket, char *word) {
 
     BUCKET_ENTRY *bucketEntry = bucket->first_entry;
     while (bucketEntry != NULL) {
-        if(strcmp(word, bucketEntry->value) == 0) {
+        if (strcmp(word, bucketEntry->value) == 0) {
             return 1;
         }
         bucketEntry = bucketEntry->next;
     }
     return 0;
-}
-
-
-HASHTABLE *create_hashtable(int hash_size) {
-    HASHTABLE *hashtable = malloc(sizeof(HASHTABLE));
-    DIE(hashtable == NULL, "Memory allocation for hashtable failed");
-    hashtable->hash_size = hash_size;
-    hashtable->first_bucket = NULL;
-    return hashtable;
-}
-
-
-void free_hashtable(HASHTABLE *hashtable) {
-    free(hashtable);
 }
 
 
@@ -75,7 +57,7 @@ BUCKET *create_bucket(int key) {
 
 
 BUCKET *get_bucket_with_hash(HASHTABLE *hashtable, int key) {
-    if(hashtable->first_bucket == NULL) {
+    if (hashtable->first_bucket == NULL) {
         return NULL;
     }
 
@@ -113,22 +95,8 @@ BUCKET *create_bucket_with_hash(HASHTABLE *hashtable, int key) {
 }
 
 
-void print_hashtable(HASHTABLE *hashtable, FILE *file) {
-
-    BUCKET *bucket = hashtable->first_bucket;
-
-    while (bucket != NULL) {
-        print_bucket(bucket, file);
-        bucket = bucket->next_bucket;
-    }
-    if(file!= stdout)
-        fclose(file);
-}
-
-
 void print_bucket(BUCKET *bucket, FILE *file) {
     BUCKET_ENTRY *bucketEntry = bucket->first_entry;
-    printf("BUCKET %d: ", bucket->key);
     while (bucketEntry != NULL) {
         fprintf(file, "%s ", bucketEntry->value);
         bucketEntry = bucketEntry->next;
@@ -137,24 +105,8 @@ void print_bucket(BUCKET *bucket, FILE *file) {
 }
 
 
-void remove_word_from_hashtable(HASHTABLE **hashtable, char *word, int hash) {
-    BUCKET *bucket = get_bucket_with_hash(*hashtable, hash);
-    if (bucket == NULL) {
-        return;
-    }
-
-    remove_word_from_bucket(bucket, word);
-    if(bucket_is_empty(bucket)) {
-        remove_empty_bucket(*hashtable, bucket);
-    }
-}
-
-
-
-
-
 void remove_word_from_bucket(BUCKET *bucket, char *word) {
-    if(bucket->first_entry == NULL) {
+    if (bucket->first_entry == NULL) {
         return;
     }
 
@@ -169,7 +121,7 @@ void remove_word_from_bucket(BUCKET *bucket, char *word) {
 
     BUCKET_ENTRY *bucketEntry = bucket->first_entry;
     while (bucketEntry != NULL) {
-        if(strcmp(bucketEntry->value, word) == 0) {
+        if (strcmp(bucketEntry->value, word) == 0) {
             bucketEntry->prev->next = bucketEntry->next;
             free(bucketEntry->value);
             free(bucketEntry);
@@ -184,7 +136,7 @@ void remove_word_from_bucket(BUCKET *bucket, char *word) {
 }
 
 int bucket_is_empty(BUCKET *bucket) {
-    if(bucket->number_of_entries > 0) {
+    if (bucket->number_of_entries > 0) {
         return 0;
     }
     return 1;
@@ -192,11 +144,11 @@ int bucket_is_empty(BUCKET *bucket) {
 
 void remove_empty_bucket(HASHTABLE *hashtable, BUCKET *to_be_removed_bucket) {
 
-    if(hashtable->first_bucket == NULL) {
+    if (hashtable->first_bucket == NULL) {
         return;
     }
 
-    if(hashtable->first_bucket->key == to_be_removed_bucket->key) {
+    if (hashtable->first_bucket->key == to_be_removed_bucket->key) {
 
         hashtable->first_bucket = hashtable->first_bucket->next_bucket;
         free(to_be_removed_bucket);
@@ -205,7 +157,7 @@ void remove_empty_bucket(HASHTABLE *hashtable, BUCKET *to_be_removed_bucket) {
 
     BUCKET *bucket = hashtable->first_bucket;
     while (bucket != NULL) {
-        if(bucket->key == to_be_removed_bucket->key) {
+        if (bucket->key == to_be_removed_bucket->key) {
             bucket->prev_bucket->next_bucket = bucket->next_bucket;
             free(to_be_removed_bucket);
             return;
@@ -214,31 +166,7 @@ void remove_empty_bucket(HASHTABLE *hashtable, BUCKET *to_be_removed_bucket) {
     }
 }
 
-int hashtable_contains_word(HASHTABLE *hashtable, char *word) {
 
-    BUCKET *bucket = hashtable->first_bucket;
 
-    while (bucket != NULL) {
-        if(bucket_contains_word(bucket, word)) {
-            return 1;
-        }
-        bucket = bucket->next_bucket;
-    }
-    return 0;
-}
 
-void clear_hashtable(HASHTABLE **hashtable) {
-    BUCKET *bucket = (*hashtable)->first_bucket;
 
-    while (bucket != NULL) {
-        BUCKET_ENTRY *bucket_entry = bucket->first_entry;
-
-        while (bucket_entry != NULL) {
-            remove_word_from_bucket(bucket, bucket_entry->value);
-            bucket_entry = bucket_entry->next;
-        }
-        remove_empty_bucket((*hashtable), bucket);
-        bucket = bucket->next_bucket;
-    }
-
-}

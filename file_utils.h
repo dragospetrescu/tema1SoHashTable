@@ -8,18 +8,19 @@
 #include <stdio.h>
 #include <string.h>
 
-FILE* get_output_file(char *file_name) {
-    FILE* file;
-    if(file_name != NULL) {
+FILE *get_output_file(char *file_name) {
+    FILE *file;
+    if (file_name != NULL) {
         file = fopen(file_name, "a");
     } else {
         file = stdout;
     }
     return file;
 }
-FILE* get_input_file(char *file_name) {
-    FILE* file;
-    if(file_name != NULL) {
+
+FILE *get_input_file(char *file_name) {
+    FILE *file;
+    if (file_name != NULL) {
         file = fopen(file_name, "r");
     } else {
         file = stdin;

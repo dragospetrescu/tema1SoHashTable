@@ -1,7 +1,8 @@
 
-#include "hashtable.h"
+#include "hashtable_interface.h"
 #include "file_utils.h"
-
+#include "utils/utils.h"
+#include "hash.h"
 
 void parse_arguments(int argc, char **argv, int *hash_size, int *no_input_files, char ***input_files);
 
@@ -54,12 +55,7 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable) {
     }
 
     if (strcmp(command_name, "add") == 0) {
-        int calculated_hash = hash(argument1, (*hashtable)->hash_size);
-        BUCKET *bucket = get_bucket_with_hash(*hashtable, calculated_hash);
-        if (bucket == NULL) {
-            bucket = create_bucket_with_hash(*hashtable, calculated_hash);
-        }
-        add_word_to_bucket(&bucket, argument1);
+        add_word_to_hashtable((*hashtable), argument1);
     }
 
     if (strcmp(command_name, "remove") == 0) {
@@ -69,6 +65,13 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable) {
     if (strcmp(command_name, "print") == 0) {
         FILE *file = get_output_file(argument1);
         print_hashtable((*hashtable), file);
+    }
+
+    if (strcmp(command_name, "print_bucket") == 0) {
+        int bucket_key = atoi(argument1);
+        FILE *file = get_output_file(argument2);
+        print_hashtable((*hashtable), file);
+        print_bucket_with_key((*hashtable), bucket_key, file);
     }
 
     if (strcmp(command_name, "find") == 0) {
@@ -82,6 +85,22 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable) {
 
     if (strcmp(command_name, "clear") == 0) {
         clear_hashtable(hashtable);
+    }
+
+    if(strcmp(command_name, "resize") == 0) {
+
+        int new_hash_size = (*hashtable)->hash_size;
+        if (strcmp(command_name, "double") == 0) {
+            new_hash_size = (*hashtable)->hash_size * 2;
+        } else if (strcmp(command_name, "halve") == 0) {
+            new_hash_size = (*hashtable)->hash_size / 2;
+        }
+
+        HASHTABLE *new_hashtable = create_hashtable(new_hash_size);
+        move_words_to_new_hashtable((*hashtable), &new_hashtable);
+        clear_hashtable(hashtable);
+        free_hashtable(*hashtable);
+        *hashtable = new_hashtable;
     }
 
 
@@ -114,7 +133,6 @@ int main(int argc, char **argv) {
             DIE(file < 0, "Opening file failed");
 
             while (fgets(command_buffer, 20000, file)) {
-//                printf("%s\n",command_buffer);
                 parse_command(command_buffer, &hashtable);
             }
 
@@ -124,7 +142,7 @@ int main(int argc, char **argv) {
 
     }
 
-
+    clear_hashtable(&hashtable);
     free_hashtable(hashtable);
     int i;
     for (i = 0; i < no_input_files; ++i) {
