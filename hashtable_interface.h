@@ -1,0 +1,8 @@
+//
+// Created by dragos on 09.03.2018.
+//
+
+#ifndef TEMA1_HASHTABLE_INTERFACE_H
+#define TEMA1_HASHTABLE_INTERFACE_H
+
+#endif //TEMA1_HASHTABLE_INTERFACE_H
