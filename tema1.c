@@ -56,13 +56,13 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable) {
     if (strcmp(command_name, "add") == 0) {
         int calculated_hash = hash(argument1, (*hashtable)->hash_size);
         BUCKET *bucket = get_bucket_with_hash(*hashtable, calculated_hash);
-        if(bucket == NULL) {
+        if (bucket == NULL) {
             bucket = create_bucket_with_hash(*hashtable, calculated_hash);
         }
         add_word_to_bucket(&bucket, argument1);
     }
 
-    if(strcmp(command_name, "remove") == 0) {
+    if (strcmp(command_name, "remove") == 0) {
         remove_word_from_hashtable(hashtable, argument1, hash(argument1, (*hashtable)->hash_size));
     }
 
@@ -80,16 +80,17 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable) {
         }
     }
 
-    if(strcmp(command_name, "clear") == 0) {
+    if (strcmp(command_name, "clear") == 0) {
         clear_hashtable(hashtable);
     }
-
-
 
 
     free(command_name);
     if (argument1 != NULL) {
         free(argument1);
+    }
+    if (argument2 != NULL) {
+        free(argument2);
     }
 
 

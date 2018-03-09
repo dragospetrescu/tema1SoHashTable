@@ -43,5 +43,6 @@ int bucket_contains_word(BUCKET *bucket, char *word);
 BUCKET *create_bucket_with_hash(HASHTABLE *hashtable, int key);
 void remove_word_from_hashtable(HASHTABLE **hashtable, char *word, int hash);
 int hashtable_contains_word(HASHTABLE *hashtable, char *word);
+void clear_hashtable(HASHTABLE **hashtable);
 
 #endif //TEMA1_HASHTABLE_H

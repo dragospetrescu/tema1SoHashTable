@@ -6,7 +6,7 @@
 
 void remove_word_from_bucket(BUCKET *bucket, char *word);
 int bucket_is_empty(BUCKET *bucket);
-void remove_bucket(HASHTABLE *hashtable, BUCKET *to_be_removed_bucket);
+void remove_empty_bucket(HASHTABLE *hashtable, BUCKET *to_be_removed_bucket);
 
 
 void add_word_to_bucket(BUCKET **bucket, char *new_word) {
@@ -145,7 +145,7 @@ void remove_word_from_hashtable(HASHTABLE **hashtable, char *word, int hash) {
 
     remove_word_from_bucket(bucket, word);
     if(bucket_is_empty(bucket)) {
-        remove_bucket(*hashtable, bucket);
+        remove_empty_bucket(*hashtable, bucket);
     }
 }
 
@@ -161,6 +161,7 @@ void remove_word_from_bucket(BUCKET *bucket, char *word) {
     if (strcmp(bucket->first_entry->value, word) == 0) {
         BUCKET_ENTRY *bucket_entry_to_be_freed = bucket->first_entry;
         bucket->first_entry = bucket->first_entry->next;
+        free(bucket_entry_to_be_freed->value);
         free(bucket_entry_to_be_freed);
         bucket->number_of_entries--;
         return;
@@ -170,6 +171,7 @@ void remove_word_from_bucket(BUCKET *bucket, char *word) {
     while (bucketEntry != NULL) {
         if(strcmp(bucketEntry->value, word) == 0) {
             bucketEntry->prev->next = bucketEntry->next;
+            free(bucketEntry->value);
             free(bucketEntry);
             bucket->number_of_entries--;
             return;
@@ -188,7 +190,7 @@ int bucket_is_empty(BUCKET *bucket) {
     return 1;
 }
 
-void remove_bucket(HASHTABLE *hashtable, BUCKET *to_be_removed_bucket) {
+void remove_empty_bucket(HASHTABLE *hashtable, BUCKET *to_be_removed_bucket) {
 
     if(hashtable->first_bucket == NULL) {
         return;
@@ -223,4 +225,20 @@ int hashtable_contains_word(HASHTABLE *hashtable, char *word) {
         bucket = bucket->next_bucket;
     }
     return 0;
+}
+
+void clear_hashtable(HASHTABLE **hashtable) {
+    BUCKET *bucket = (*hashtable)->first_bucket;
+
+    while (bucket != NULL) {
+        BUCKET_ENTRY *bucket_entry = bucket->first_entry;
+
+        while (bucket_entry != NULL) {
+            remove_word_from_bucket(bucket, bucket_entry->value);
+            bucket_entry = bucket_entry->next;
+        }
+        remove_empty_bucket((*hashtable), bucket);
+        bucket = bucket->next_bucket;
+    }
+
 }
