@@ -1,5 +1,6 @@
 
 #include "hashtable.h"
+#include "file_utils.h"
 
 
 void parse_arguments(int argc, char **argv, int *hash_size, int *no_input_files, char ***input_files);
@@ -38,32 +39,57 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable) {
     char *command_name = malloc(sizeof(char) * (strlen(token) + 1));
     strcpy(command_name, token);
 
-    char *argument = NULL;
+    char *argument1 = NULL;
+    char *argument2 = NULL;
     token = strtok(NULL, s);
     if (token != NULL) {
-        argument = malloc(sizeof(char) * (strlen(token) + 1));
-        strcpy(argument, token);
+        argument1 = malloc(sizeof(char) * (strlen(token) + 1));
+        strcpy(argument1, token);
+
+        token = strtok(NULL, s);
+        if (token != NULL) {
+            argument2 = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy(argument2, token);
+        }
     }
 
     if (strcmp(command_name, "add") == 0) {
-        BUCKET *bucket = get_bucket_with_hash(*hashtable, hash(argument, (*hashtable)->hash_size));
-        add_word_to_bucket(&bucket, argument);
+        int calculated_hash = hash(argument1, (*hashtable)->hash_size);
+        BUCKET *bucket = get_bucket_with_hash(*hashtable, calculated_hash);
+        if(bucket == NULL) {
+            bucket = create_bucket_with_hash(*hashtable, calculated_hash);
+        }
+        add_word_to_bucket(&bucket, argument1);
     }
 
     if(strcmp(command_name, "remove") == 0) {
-        BUCKET *bucket = get_bucket_with_hash(*hashtable, hash(argument, (*hashtable)->hash_size));
-        if(buc)
+        remove_word_from_hashtable(hashtable, argument1, hash(argument1, (*hashtable)->hash_size));
     }
 
     if (strcmp(command_name, "print") == 0) {
-        print_hashtable((*hashtable), argument);
+        FILE *file = get_output_file(argument1);
+        print_hashtable((*hashtable), file);
     }
+
+    if (strcmp(command_name, "find") == 0) {
+        FILE *file = get_output_file(argument2);
+        if (hashtable_contains_word(*hashtable, argument1)) {
+            fprintf(file, "True\n");
+        } else {
+            fprintf(file, "False\n");
+        }
+    }
+
+    if(strcmp(command_name, "clear") == 0) {
+        clear_hashtable(hashtable);
+    }
+
 
 
 
     free(command_name);
-    if (argument != NULL) {
-        free(argument);
+    if (argument1 != NULL) {
+        free(argument1);
     }
 
 
@@ -91,7 +117,7 @@ int main(int argc, char **argv) {
                 parse_command(command_buffer, &hashtable);
             }
 
-
+            fclose(file);
         }
     } else {
 
