@@ -1,7 +1,7 @@
 
 #include "hashtable_interface.h"
 #include "file_utils.h"
-#include "utils/utils.h"
+#include "utils.h"
 #include "hash.h"
 
 void parse_arguments(int argc, char **argv, int *hash_size, int *no_input_files, char ***input_files);

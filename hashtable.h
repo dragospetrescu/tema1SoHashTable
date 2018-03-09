@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "hash.h"
-#include "utils/utils.h"
+#include "utils.h"
 #include "hashtable_interface.h"
 
 
