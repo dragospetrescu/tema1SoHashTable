@@ -8,23 +8,25 @@
 #include <stdio.h>
 
 typedef struct values_list {
-    char *value;
-    struct values_list *next;
-    struct values_list *prev;
-} BUCKET_ENTRY;
+
+	char *value;
+	struct values_list *next;
+	struct values_list *prev;
+
+	} BUCKET_ENTRY;
 
 typedef struct bucket {
-    unsigned int key;
-    int number_of_entries;
-    BUCKET_ENTRY *first_entry;
-    struct bucket *next_bucket;
-    struct bucket *prev_bucket;
+	unsigned int key;
+	int number_of_entries;
+	BUCKET_ENTRY *first_entry;
+	struct bucket *next_bucket;
+	struct bucket *prev_bucket;
 } BUCKET;
 
 typedef struct hashtable {
-    int no_buckets;
-    int hash_size;
-    BUCKET *first_bucket;
+	int no_buckets;
+	int hash_size;
+	BUCKET *first_bucket;
 } HASHTABLE;
 
 void add_word_to_hashtable(HASHTABLE *hashtable, char *word);
@@ -41,7 +43,8 @@ HASHTABLE *create_hashtable(int hash_size);
 
 void free_hashtable(HASHTABLE *hashtable);
 
-void move_words_to_new_hashtable(HASHTABLE *old_hashtable, HASHTABLE **new_hashtable);
+void move_words_to_new_hashtable(HASHTABLE *old_hashtable,
+								 HASHTABLE **new_hashtable);
 
 void print_bucket_with_key(HASHTABLE *hashtable, int bucket_key, FILE *file);
 
