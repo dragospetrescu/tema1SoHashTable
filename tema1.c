@@ -154,7 +154,9 @@ int main(int argc, char **argv) {
 	if (no_input_files > 0) {
 		for (i = 0; i < no_input_files; ++i) {
 			FILE *file = fopen(input_files[i], "r");
-			DIE(file < 0, "Opening file failed");
+			if(file < 0) {
+				continue;
+			}
 
 			while (fgets(command_buffer, 20000, file)) {
 				parse_command(command_buffer, &hashtable);
