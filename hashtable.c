@@ -58,51 +58,23 @@ BUCKET *create_bucket(int key) {
 
 
 BUCKET *get_bucket_with_hash(HASHTABLE *hashtable, int key) {
-	if (hashtable->first_bucket == NULL) {
+	if (hashtable->buckets == NULL && hashtable->hash_size <= key) {
 		return NULL;
 	}
 
-	BUCKET *bucket = hashtable->first_bucket;
-	while (bucket != NULL) {
-		if (bucket->key == key) {
-			return bucket;
-		}
-		bucket = bucket->next_bucket;
-	}
-	return NULL;
+	return &hashtable->buckets[key];
 }
-
-
-BUCKET *create_bucket_with_hash(HASHTABLE *hashtable, int key) {
-	if (hashtable->first_bucket == NULL) {
-		hashtable->first_bucket = create_bucket(key);
-		hashtable->first_bucket->first_entry = NULL;
-		hashtable->first_bucket->next_bucket = NULL;
-		hashtable->first_bucket->prev_bucket = NULL;
-		hashtable->first_bucket->number_of_entries = 0;
-		return hashtable->first_bucket;
-	}
-
-	BUCKET *bucket = hashtable->first_bucket;
-	while (bucket->next_bucket != NULL) {
-		bucket = bucket->next_bucket;
-	}
-	bucket->next_bucket = create_bucket(key);
-	bucket->next_bucket->prev_bucket = bucket;
-	bucket = bucket->next_bucket;
-	bucket->next_bucket = NULL;
-	bucket->number_of_entries = 0;
-	return bucket;
-}
-
 
 void print_bucket(BUCKET *bucket, FILE *file) {
-	BUCKET_ENTRY *bucketEntry = bucket->first_entry;
-	while (bucketEntry != NULL) {
-		fprintf(file, "%s ", bucketEntry->value);
-		bucketEntry = bucketEntry->next;
+	if(!bucket_is_empty(bucket)) {
+		BUCKET_ENTRY *bucketEntry = bucket->first_entry;
+		int i;
+		for (i = 0; i < bucket->number_of_entries; ++i) {
+			fprintf(file, "%s ", bucketEntry->value);
+			bucketEntry = bucketEntry->next;
+		}
+		fprintf(file, "\n");
 	}
-	fprintf(file, "\n");
 }
 
 
@@ -141,30 +113,6 @@ int bucket_is_empty(BUCKET *bucket) {
 		return 0;
 	}
 	return 1;
-}
-
-void remove_empty_bucket(HASHTABLE *hashtable, BUCKET *to_be_removed_bucket) {
-
-	if (hashtable->first_bucket == NULL) {
-		return;
-	}
-
-	if (hashtable->first_bucket->key == to_be_removed_bucket->key) {
-
-		hashtable->first_bucket = hashtable->first_bucket->next_bucket;
-		free(to_be_removed_bucket);
-		return;
-	}
-
-	BUCKET *bucket = hashtable->first_bucket;
-	while (bucket != NULL) {
-		if (bucket->key == to_be_removed_bucket->key) {
-			bucket->prev_bucket->next_bucket = bucket->next_bucket;
-			free(to_be_removed_bucket);
-			return;
-		}
-		bucket = bucket->next_bucket;
-	}
 }
 
 

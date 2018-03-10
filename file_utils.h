@@ -14,19 +14,9 @@ FILE *get_output_file(char *file_name) {
 	if (file_name != NULL) {
 		file = fopen(file_name, "a");
 		DIE(file < 0, "Opening file failed");
-	} else {
+	} else
 		file = stdout;
-	}
-	return file;
-}
 
-FILE *get_input_file(char *file_name) {
-	FILE *file;
-	if (file_name != NULL) {
-		file = fopen(file_name, "r");
-	} else {
-		file = stdin;
-	}
 	return file;
 }
 

@@ -7,18 +7,20 @@ void parse_arguments(int argc, char **argv, int *hash_size, int *no_input_files,
 					 char ***input_files);
 
 void parse_arguments(int argc, char **argv, int *hash_size, int *no_input_files,
-					 char ***input_files) {
+					 char ***input_files)
+{
 	DIE(argc < 2, "Invalid number of arguments");
 
-
 	char *ptr;
+
 	(*hash_size) = strtol(argv[1], &ptr, 10);
 	DIE((*ptr) != '\0' || *hash_size <= 0, "Invalid hash table size");
 
 	if (argc > 2) {
 		(*no_input_files) = argc - 2;
 		(*input_files) = malloc(sizeof(char *) * ((*no_input_files)));
-		DIE((*input_files) == NULL, "Memory allocation for input files failed");
+		DIE((*input_files) == NULL,
+			"Memory allocation for input files failed");
 
 		int i;
 		for (i = 0; i < (*no_input_files); ++i) {
@@ -29,24 +31,22 @@ void parse_arguments(int argc, char **argv, int *hash_size, int *no_input_files,
 				"Memory allocation for input files failed");
 			strcpy((*input_files)[i], argv[i + 2]);
 		}
+	} else {
+		(*no_input_files) = 0;
 	}
 }
 
 
-void parse_command(char command_buffer[20000], HASHTABLE **hashtable) {
-
+void parse_command(char command_buffer[20000], HASHTABLE **hashtable)
+{
 	const char s[3] = " \n";
 	char *token;
 
-	if(strcmp(command_buffer, "\n") == 0) {
+	if (strcmp(command_buffer, "\n") == 0)
 		return;
-	}
-
-	/* get the first token */
 	token = strtok(command_buffer, s);
-	if(token == NULL) {
+	if (token == NULL)
 		return;
-	}
 
 	char *command_name = malloc(sizeof(char) * (strlen(token) + 1));
 	DIE(command_name == NULL, "Memory allocation failed");
@@ -54,6 +54,7 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable) {
 
 	char *argument1 = NULL;
 	char *argument2 = NULL;
+
 	token = strtok(NULL, s);
 	if (token != NULL) {
 		argument1 = malloc(sizeof(char) * (strlen(token) + 1));
@@ -100,53 +101,50 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable) {
 		FILE *file = get_output_file(argument2);
 		DIE(argument1 == NULL || strcmp(argument1, "") == 0,
 			"Invalid find command");
-		if (hashtable_contains_word(*hashtable, argument1)) {
+		if (hashtable_contains_word(*hashtable, argument1))
 			fprintf(file, "True\n");
-		} else {
+		else
 			fprintf(file, "False\n");
-		}
 
-	} else if (strcmp(command_name, "clear") == 0) {
+
+	} else if (strcmp(command_name, "clear") == 0)
 
 		clear_hashtable(hashtable);
 
-	} else if (strcmp(command_name, "resize") == 0) {
+	else if (strcmp(command_name, "resize") == 0) {
 		DIE(argument1 == NULL || strcmp(argument1, "") == 0,
 			"Invalid find command");
 		int new_hash_size;
-		if (strcmp(argument1, "double") == 0) {
+		if (strcmp(argument1, "double") == 0)
 			new_hash_size = (*hashtable)->hash_size * 2;
-		} else if (strcmp(argument1, "halve") == 0) {
+		else if (strcmp(argument1, "halve") == 0)
 			new_hash_size = (*hashtable)->hash_size / 2;
-		} else {
+		else
 			DIE(1, "Invalid resize command");
-		}
 
 		HASHTABLE *new_hashtable = create_hashtable(new_hash_size);
 		move_words_to_new_hashtable((*hashtable), &new_hashtable);
 		clear_hashtable(hashtable);
-		free_hashtable(*hashtable);
+		free_hashtable(hashtable);
 		*hashtable = new_hashtable;
 
-	} else {
+	} else
 		DIE(1, "Invalid command");
-	}
 
 
 	free(command_name);
-	if (argument1 != NULL) {
+	if (argument1 != NULL)
 		free(argument1);
-	}
-	if (argument2 != NULL) {
+
+	if (argument2 != NULL)
 		free(argument2);
-	}
 }
 
 
-int main(int argc, char **argv) {
-
+int main(int argc, char **argv)
+{
 	int hash_size;
-	int no_input_files;
+	int no_input_files = 0;
 	char **input_files;
 	int i;
 
@@ -158,28 +156,26 @@ int main(int argc, char **argv) {
 	if (no_input_files > 0) {
 		for (i = 0; i < no_input_files; ++i) {
 			FILE *file = fopen(input_files[i], "r");
-			if(file < 0) {
+			if (file < 0)
 				continue;
-			}
 
-			while (fgets(command_buffer, 20000, file)) {
+
+			while (fgets(command_buffer, 20000, file))
 				parse_command(command_buffer, &hashtable);
-			}
+
 
 			fclose(file);
 		}
-	} else {
-		while (fgets(command_buffer, 20000, stdin)) {
+	} else
+		while (fgets(command_buffer, 20000, stdin))
 			parse_command(command_buffer, &hashtable);
-		}
-	}
 
 	clear_hashtable(&hashtable);
-	free_hashtable(hashtable);
+	free_hashtable(&hashtable);
 
-	for (i = 0; i < no_input_files; ++i) {
+	for (i = 0; i < no_input_files; ++i)
 		free(input_files[i]);
-	}
-	free(input_files);
+	if (no_input_files > 0)
+		free(input_files);
 	return 0;
 }
