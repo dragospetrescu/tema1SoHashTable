@@ -38,6 +38,10 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable) {
 	const char s[3] = " \n";
 	char *token;
 
+	if(strcmp(command_buffer, "\n") == 0) {
+		return;
+	}
+
 	/* get the first token */
 	token = strtok(command_buffer, s);
 	if(token == NULL) {
