@@ -1,6 +1,4 @@
-//
-// Created by dragos on 09.03.2018.
-//
+
 
 #ifndef TEMA1_UTILS_H_H
 #define TEMA1_UTILS_H_H
@@ -18,4 +16,6 @@
 		}															\
 	} while (0)
 
-#endif //TEMA1_UTILS_H_H
+
+
+#endif

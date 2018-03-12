@@ -1,6 +1,3 @@
-//
-// Created by dragos on 09.03.2018.
-//
 
 #include "hashtable_interface.h"
 #include "hashtable.h"
@@ -50,7 +47,8 @@ void remove_word_from_hashtable(HASHTABLE **hashtable, char *word,
 }
 
 void print_hashtable(HASHTABLE *hashtable, FILE *file) {
-	for (int i = 0; i < hashtable->hash_size; ++i) {
+	int i;
+	for (i = 0; i < hashtable->hash_size; ++i) {
 		BUCKET *bucket = get_bucket_with_hash(hashtable, i);
 		if (!bucket->is_empty)
 			print_bucket(bucket, file);

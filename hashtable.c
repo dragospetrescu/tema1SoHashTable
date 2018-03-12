@@ -1,6 +1,3 @@
-//
-// Created by dragos on 05.03.2018.
-//
 
 #include "hashtable.h"
 

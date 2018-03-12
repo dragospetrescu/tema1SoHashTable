@@ -1,6 +1,3 @@
-//
-// Created by dragos on 05.03.2018.
-//
 
 #ifndef TEMA1_HASHTABLE_H
 #define TEMA1_HASHTABLE_H
@@ -27,4 +24,4 @@ void remove_word_from_bucket(BUCKET *bucket, char *word);
 
 int bucket_is_empty(BUCKET *bucket);
 
-#endif //TEMA1_HASHTABLE_H
+#endif

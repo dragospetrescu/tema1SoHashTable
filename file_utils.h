@@ -1,6 +1,4 @@
-//
-// Created by dragos on 09.03.2018.
-//
+
 
 #ifndef TEMA1_FILE_UTILS_H
 #define TEMA1_FILE_UTILS_H
@@ -20,4 +18,4 @@ FILE *get_output_file(char *file_name) {
 	return file;
 }
 
-#endif //TEMA1_FILE_UTILS_H
+#endif

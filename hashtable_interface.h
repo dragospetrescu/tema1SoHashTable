@@ -1,6 +1,3 @@
-//
-// Created by dragos on 09.03.2018.
-//
 
 #ifndef TEMA1_HASHTABLE_INTERFACE_H
 #define TEMA1_HASHTABLE_INTERFACE_H
@@ -48,4 +45,4 @@ void move_words_to_new_hashtable(HASHTABLE *old_hashtable,
 void print_bucket_with_key(HASHTABLE *hashtable, int bucket_key, FILE *file);
 
 
-#endif //TEMA1_HASHTABLE_INTERFACE_H
+#endif
