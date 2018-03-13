@@ -1,1 +1,53 @@
-My first SO homework
+================================================================================
+================================== Tema 1 SO ===================================
+=========================== Petrescu Dragos 332CC ==============================
+================================================================================
+
+1. Structura
+Hashtable-ul este format din size structuri bucket, alocate cu malloc sub forma
+unui vector.
+Buckets continte o lista dublu inlantuita de Buckets_entries. Astfel ca nu aloc
+mai mult spatiu decat este necesar.
+
+
+2. Fisiere
+tema1.c
+-> contine functia main
+-> contine parserul de argumente si parserul de comenzi. Apeleaza functii din
+    hastable in functie de comanda primita.
+
+hashtable_interface
+-> contine exact functiile cerute de enuntul problemei
+-> apeleaza functii din bucket_interface.
+
+bucket_interface
+-> lucreaza cu lista dublu inlantuita de valori
+-> ofera un API ce ascunde de hashtable modul de stocare in bucket
+
+utils
+-> macro-ul DIE
+
+file_utils
+-> functii cu fisiere
+
+
+3. APIs
+Am incercat abstractizarea hashtable-ului astfel:
+-> pentru tema1.c felul in care functioneaza hashtable-ul nu este vizibil,
+    acesta apeland metode din hastable_interface pentru a efectua orice operatie
+    pe hashtable
+
+-> pentru hashtable felul de functionare a buckets-urilor este invizibil.
+    Hashtable-ul nu lucreaza niciodata cu buckets ci doar apeleaza metode din
+    buckets_interface, care abstractizeaza modul de functionare al buckets-
+    urilor.
+
+
+4. Variabile globale si parametrii
+Codul nu contine NICI O variabila globala.
+Hashtable-ul, alaturi de toate informatiile relevante sunt pasate sub forma de
+argumente in functii.
+
+
+5. Aruncare de erori
+Am folosit macro-ul DIE din laboratoare pentru aruncarea de erori.
