@@ -4,6 +4,8 @@
 
 void add_word_to_bucket(BUCKET **bucket, char *new_word) {
 
+	BUCKET_ENTRY *last_bucket_entry;
+
 	if (bucket_contains_word((*bucket), new_word)) {
 		return;
 	}
@@ -18,7 +20,7 @@ void add_word_to_bucket(BUCKET **bucket, char *new_word) {
 		(*bucket)->number_of_entries++;
 		return;
 	}
-	BUCKET_ENTRY *last_bucket_entry = (*bucket)->first_entry;
+	last_bucket_entry = (*bucket)->first_entry;
 	while (last_bucket_entry->next != NULL) {
 		last_bucket_entry = last_bucket_entry->next;
 	}
@@ -76,6 +78,8 @@ void print_bucket(BUCKET *bucket, FILE *file) {
 
 
 void remove_word_from_bucket(BUCKET *bucket, char *word) {
+	BUCKET_ENTRY *bucketEntry;
+
 	if (bucket->first_entry == NULL) {
 		return;
 	}
@@ -89,7 +93,7 @@ void remove_word_from_bucket(BUCKET *bucket, char *word) {
 		return;
 	}
 
-	BUCKET_ENTRY *bucketEntry = bucket->first_entry;
+	bucketEntry = bucket->first_entry;
 	while (bucketEntry != NULL) {
 		if (strcmp(bucketEntry->value, word) == 0) {
 			bucketEntry->prev->next = bucketEntry->next;
