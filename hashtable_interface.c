@@ -2,7 +2,8 @@
 #include "hashtable_interface.h"
 #include "hashtable.h"
 
-HASHTABLE *create_hashtable(int hash_size) {
+HASHTABLE *create_hashtable(int hash_size)
+{
 	int i;
 	HASHTABLE *hashtable = malloc(sizeof(HASHTABLE));
 
@@ -21,22 +22,29 @@ HASHTABLE *create_hashtable(int hash_size) {
 	return hashtable;
 }
 
-void free_hashtable(HASHTABLE **hashtable) {
+void free_hashtable(HASHTABLE **hashtable)
+{
 
 	free((*hashtable)->buckets);
 	free(*hashtable);
 }
 
-void add_word_to_hashtable(HASHTABLE *hashtable, char *word) {
+void add_word_to_hashtable(HASHTABLE *hashtable, char *word)
+{
 	unsigned int calculated_hash = hash(word, hashtable->hash_size);
 	BUCKET *bucket = get_bucket_with_hash(hashtable, calculated_hash);
+
 	add_word_to_bucket(&bucket, word);
 	bucket->is_empty = 0;
 }
 
-void remove_word_from_hashtable(HASHTABLE **hashtable, char *word,
-								unsigned int hash) {
+void remove_word_from_hashtable(
+		HASHTABLE **hashtable,
+		char *word,
+		unsigned int hash)
+{
 	BUCKET *bucket = get_bucket_with_hash(*hashtable, hash);
+
 	if (bucket == NULL)
 		return;
 
@@ -46,10 +54,14 @@ void remove_word_from_hashtable(HASHTABLE **hashtable, char *word,
 
 }
 
-void print_hashtable(HASHTABLE *hashtable, FILE *file) {
+void print_hashtable(HASHTABLE *hashtable, FILE *file)
+{
 	int i;
+	BUCKET *bucket;
+
 	for (i = 0; i < hashtable->hash_size; ++i) {
-		BUCKET *bucket = get_bucket_with_hash(hashtable, i);
+		bucket = get_bucket_with_hash(hashtable, i);
+
 		if (!bucket->is_empty)
 			print_bucket(bucket, file);
 	}
@@ -57,8 +69,10 @@ void print_hashtable(HASHTABLE *hashtable, FILE *file) {
 		fclose(file);
 }
 
-void print_bucket_with_key(HASHTABLE *hashtable, int bucket_key, FILE *file) {
+void print_bucket_with_key(HASHTABLE *hashtable, int bucket_key, FILE *file)
+{
 	BUCKET *bucket = get_bucket_with_hash(hashtable, bucket_key);
+
 	if (bucket != NULL && !bucket_is_empty(bucket))
 		print_bucket(bucket, file);
 
@@ -66,39 +80,49 @@ void print_bucket_with_key(HASHTABLE *hashtable, int bucket_key, FILE *file) {
 		fclose(file);
 }
 
-int hashtable_contains_word(HASHTABLE *hashtable, char *word) {
+int hashtable_contains_word(HASHTABLE *hashtable, char *word)
+{
 	unsigned int word_hash = hash(word, hashtable->hash_size);
-
 	BUCKET *bucket = get_bucket_with_hash(hashtable, word_hash);
+
 	if (bucket_contains_word(bucket, word))
 		return 1;
 	return 0;
 }
 
-void clear_hashtable(HASHTABLE **hashtable) {
+void clear_hashtable(HASHTABLE **hashtable)
+{
 	int i;
-	for (i = 0; i < (*hashtable)->hash_size; ++i) {
-		BUCKET *bucket = get_bucket_with_hash((*hashtable), i);
+	BUCKET *bucket;
+	BUCKET_ENTRY *bucket_entry;
+	BUCKET_ENTRY *next_bucket_entry;
 
-		BUCKET_ENTRY *bucket_entry = bucket->first_entry;
+	for (i = 0; i < (*hashtable)->hash_size; ++i) {
+		bucket = get_bucket_with_hash((*hashtable), i);
+		bucket_entry = bucket->first_entry;
 
 		while (bucket_entry != NULL) {
-			BUCKET_ENTRY *next_bucket_entry = bucket_entry->next;
+			next_bucket_entry = bucket_entry->next;
 			remove_word_from_bucket(bucket, bucket_entry->value);
 			bucket_entry = next_bucket_entry;
 		}
 	}
 }
 
-void move_words_to_new_hashtable(HASHTABLE *old_hashtable,
-								 HASHTABLE **new_hashtable) {
+void move_words_to_new_hashtable(
+		HASHTABLE *old_hashtable,
+		HASHTABLE **new_hashtable)
+{
 	int i;
+
 	for (i = 0; i < old_hashtable->hash_size; ++i) {
 		BUCKET *bucket = get_bucket_with_hash(old_hashtable, i);
 		BUCKET_ENTRY *bucket_entry = bucket->first_entry;
 
 		while (bucket_entry != NULL) {
-			add_word_to_hashtable((*new_hashtable), bucket_entry->value);
+			add_word_to_hashtable(
+					(*new_hashtable),
+					bucket_entry->value);
 			bucket_entry = bucket_entry->next;
 		}
 	}

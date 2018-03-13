@@ -1,6 +1,8 @@
-CFLAGS=/nologo /W4 /EHsc /Za /I.     # TODO define
+CFLAGS=/nologo /W4 /EHsc /Za /I.  
 
 all: tema1.exe
+
+build: tema1.exe
 
 tema1.exe: tema1.obj hashtable.obj hashtable_interface.obj
 	link /nologo /out:tema1.exe tema1.obj hashtable.obj hashtable_interface.obj hash.lib

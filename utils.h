@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 #include <errno.h>
+
 #define DIE(assertion, call_description)				\
 	do {								\
 		if (assertion) {					\

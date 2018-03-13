@@ -28,7 +28,8 @@ void parse_arguments(int argc, char **argv, int *hash_size, int *no_input_files,
 		for (i = 0; i < (*no_input_files); ++i) {
 
 			(*input_files)[i] = malloc(
-					sizeof(char) * (strlen(argv[i + 2]) + 1));
+					sizeof(char) *
+					(strlen(argv[i + 2]) + 1));
 			DIE((*input_files)[i] == NULL,
 				"Memory allocation for input files failed");
 			strcpy((*input_files)[i], argv[i + 2]);
@@ -41,7 +42,7 @@ void parse_arguments(int argc, char **argv, int *hash_size, int *no_input_files,
 
 void parse_command(char command_buffer[20000], HASHTABLE **hashtable)
 {
-	const char s[3] = " \n";
+	const char s[3] = "\n ";
 	char *token;
 	char *command_name;
 	char *argument1 = NULL;
@@ -85,19 +86,20 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable)
 
 		DIE(argument1 == NULL || strcmp(argument1, "") == 0,
 			"Invalid remove command");
-		remove_word_from_hashtable(hashtable, argument1,
-								   hash(argument1, (*hashtable)->hash_size));
+		remove_word_from_hashtable(
+				hashtable,
+				argument1,
+				hash(argument1, (*hashtable)->hash_size));
 
 	} else if (strcmp(command_name, "print") == 0) {
 
 		FILE *file = get_output_file(argument1);
+
 		print_hashtable((*hashtable), file);
 
 	} else if (strcmp(command_name, "print_bucket") == 0) {
 		DIE(argument1 == NULL || strcmp(argument1, "") == 0,
 			"Invalid print_bucket command");
-		
-
 		bucket_key = strtol(argument1, &ptr, 10);
 		DIE(*ptr != '\0', "Invalid number for print_bucket");
 
@@ -107,6 +109,7 @@ void parse_command(char command_buffer[20000], HASHTABLE **hashtable)
 	} else if (strcmp(command_name, "find") == 0) {
 
 		FILE *file = get_output_file(argument2);
+
 		DIE(argument1 == NULL || strcmp(argument1, "") == 0,
 			"Invalid find command");
 		if (hashtable_contains_word(*hashtable, argument1))
