@@ -1,5 +1,5 @@
 
-#include "hashtable.h"
+#include "bucket_interface.h"
 
 
 void add_word_to_bucket(BUCKET **bucket, char *new_word)

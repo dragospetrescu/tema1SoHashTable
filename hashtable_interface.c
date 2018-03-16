@@ -1,6 +1,6 @@
 
 #include "hashtable_interface.h"
-#include "hashtable.h"
+#include "bucket_interface.h"
 
 HASHTABLE *create_hashtable(int hash_size)
 {
